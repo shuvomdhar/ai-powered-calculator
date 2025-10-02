@@ -1,6 +1,13 @@
 declare global {
+    interface MathJaxHub {
+        Queue: (args: unknown[]) => void;
+        Config: (config: object) => void;
+    }
+    interface MathJaxObject {
+        Hub: MathJaxHub;
+    }
     interface Window {
-        MathJax?: any;
+        MathJax?: MathJaxObject;
     }
 }
 
@@ -36,14 +43,14 @@ export default function Home() {
 
     // const lazyBrush = new LazyBrush({
     //     radius: 10,
-    //     enabled: true,
+                window.MathJax?.Hub.Queue(["Typeset", window.MathJax.Hub]);
     //     initialPoint: { x: 0, y: 0 },
     // });
 
     useEffect(() => {
         if (latexExpression.length > 0 && window.MathJax) {
             setTimeout(() => {
-                window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub]);
+                window.MathJax?.Hub.Queue(["Typeset", window.MathJax.Hub]);
             }, 0);
         }
     }, [latexExpression]);
@@ -85,7 +92,7 @@ export default function Home() {
         document.head.appendChild(script);
 
         script.onload = () => {
-            window.MathJax.Hub.Config({
+            window.MathJax?.Hub?.Config({
                 tex2jax: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
             });
         };
